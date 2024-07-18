@@ -7,6 +7,7 @@ import com.example.AffairsManagementApp.entities.Employe;
 import com.example.AffairsManagementApp.services.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class EmployeeController {
 
     // POST: Add a new employee to an agency
     @PostMapping("/agency/{agencyId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable (name = "agencyId") Long agencyId) {
         try {
             EmployeeDTO savedEmployee = employeesService.saveEmployeeByAgency(employeeDTO, agencyId);
@@ -32,6 +34,7 @@ public class EmployeeController {
 
     // DELETE: Remove an employee by ID
     @DeleteMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable(name = "employeeId") Long employeeId) {
         try {
             employeesService.deleteEmployee(employeeId);
@@ -43,6 +46,7 @@ public class EmployeeController {
 
     // GET: Retrieve all employees
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
         List<EmployeeDTO> employees =  employeesService.getAllEmployees();
         return ResponseEntity.ok(employees);
@@ -50,6 +54,7 @@ public class EmployeeController {
 
     // GET: Retrieve employees by agency ID
     @GetMapping("/agency/{agencyId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<EmployeeDTO>> getEmployeesByAgency(@PathVariable(name = "agencyId") Long agencyId){
         try {
             List<EmployeeDTO> employees =  employeesService.getEmployeesByAgency(agencyId);
@@ -63,6 +68,7 @@ public class EmployeeController {
 
     // GET: Retrieve a single employee by ID
     @GetMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<EmployeeDTO> getById(@PathVariable(name = "employeeId") Long employeeId) {
        try { EmployeeDTO employee = employeesService.getEmployeeById(employeeId);
            return ResponseEntity.ok(employee);

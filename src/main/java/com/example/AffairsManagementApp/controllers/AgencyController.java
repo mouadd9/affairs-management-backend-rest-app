@@ -6,6 +6,7 @@ import com.example.AffairsManagementApp.entities.Agence;
 import com.example.AffairsManagementApp.services.AgencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,7 @@ public class AgencyController {
 
     // Endpoint to create a new agency
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> createAgency(@RequestBody AgencyDTO agency) {
         AgencyDTO newAgency = agencyService.createAgency(agency);
         return ResponseEntity.ok(newAgency);
@@ -26,6 +28,7 @@ public class AgencyController {
 
     // Endpoint to retrieve all agencies
     @GetMapping("/agencies")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<AgencyDTO>> getAllAgencies() {
 
         List<AgencyDTO> agencies = agencyService.getAllAgencies();
@@ -34,6 +37,7 @@ public class AgencyController {
 
     // Endpoint to retrieve a specific agency by ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> getAgencyById(@PathVariable(name = "id") Long id) {
         try {
             AgencyDTO agencyDTO = agencyService.getAgencyById(id);
