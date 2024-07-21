@@ -2,11 +2,11 @@ package com.example.AffairsManagementApp.services;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
-import com.example.AffairsManagementApp.entities.Agence;
+import com.example.AffairsManagementApp.Exceptions.UserIdNotFoundException;
+import com.example.AffairsManagementApp.entities.Agency;
 import com.example.AffairsManagementApp.mappers.AgencyMapper;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,22 +21,23 @@ public class AgencyServiceImpl implements AgencyService{
     AgencyMapper agencyMapper;
     @Override
     public AgencyDTO createAgency(AgencyDTO agencyDTO) {
-       Agence agence = agencyRepository.save(agencyMapper.convertToEntity(agencyDTO));
+       Agency agency = agencyRepository.save(agencyMapper.convertToEntity(agencyDTO));
 
-        return agencyMapper.convertToDTO(agence);
+        return agencyMapper.convertToDTO(agency);
     }
 
     @Override
     public List<AgencyDTO> getAllAgencies() {
 
-        List<Agence> agences = agencyRepository.findAll();
-        List<AgencyDTO> agencyDTOS = agences.stream().map(agence -> agencyMapper.convertToDTO(agence)).collect(Collectors.toList());
+        List<Agency> agencies = agencyRepository.findAll();
+        List<AgencyDTO> agencyDTOS = agencies.stream().map(agency -> agencyMapper.convertToDTO(agency)).collect(Collectors.toList());
         return agencyDTOS;
     }
 
     @Override
     public AgencyDTO getAgencyById(Long agencyId) throws AgencyNotFoundException {
-        Agence agence = agencyRepository.findById(agencyId).orElseThrow(()-> new AgencyNotFoundException("agency with id" + agencyId + "not found"));
-        return agencyMapper.convertToDTO(agence);
+        Agency agency = agencyRepository.findById(agencyId).orElseThrow(()-> new AgencyNotFoundException("agency with id" + agencyId + "not found"));
+        return agencyMapper.convertToDTO(agency);
     }
+
 }

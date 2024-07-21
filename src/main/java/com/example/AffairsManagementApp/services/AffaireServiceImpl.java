@@ -1,18 +1,14 @@
-package com.example.AffairsManagementApp.services;
+/*package com.example.AffairsManagementApp.services;
 
 import com.example.AffairsManagementApp.Exceptions.AffairNotFoundException;
 import com.example.AffairsManagementApp.entities.Affaire;
-import com.example.AffairsManagementApp.entities.Operation;
-import com.example.AffairsManagementApp.enums.OperationTypes;
 import com.example.AffairsManagementApp.repositories.Affairesrepository;
-import com.example.AffairsManagementApp.repositories.Operationsrepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -71,3 +67,4 @@ public class AffaireServiceImpl implements AffaireService {
         affairesrepository.deleteById(affaireId);
     }
 }
+*/

@@ -1,4 +1,4 @@
-package com.example.AffairsManagementApp.services;
+/*package com.example.AffairsManagementApp.services;
 
 import com.example.AffairsManagementApp.Exceptions.AffairNotFoundException;
 import com.example.AffairsManagementApp.entities.Affaire;
@@ -12,3 +12,4 @@ public interface AffaireService {
     Affaire getAffaireById(Long affaireId) throws AffairNotFoundException, AffairNotFoundException; // this will get an affaire by id
     void deleteAffaire(Long affaireId) throws AffairNotFoundException;
 }
+*/

@@ -1,7 +1,5 @@
 package com.example.AffairsManagementApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,23 +11,22 @@ import java.util.List;
 
 @Entity
 @Data @AllArgsConstructor @NoArgsConstructor
-public class Affaire {
+public class Affair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    // FK
-
-    private String codeAgence; // Numérique, Obligatoire
 
     @ManyToOne
-    private Agence agence; // FK
-    @ManyToOne
-    private Employe employe; // FK
+    @JoinColumn(name = "agency_id", nullable = false)
+    private Agency agency; // FK
 
-    @OneToMany(mappedBy = "affaire")
-    private List<Operation> operations;
 
+
+
+
+
+    /*private String codeAgence; // Numérique, Obligatoire
     // Beneficiaire details
     private String typeFinancement; // Alphanumérique, Obligatoire
     private String typeIntervention; // Alphanumérique, Obligatoire
@@ -67,6 +64,6 @@ public class Affaire {
     private String numeroCNIECoIndivisaire; // Alphanumérique
     private String genreCoIndivisaire; // Alphanumérique
     private String liaisonFamilialeCoIndivisaire; // Alphanumérique
-
+*/
 }
 

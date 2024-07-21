@@ -1,26 +1,27 @@
 package com.example.AffairsManagementApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor @AllArgsConstructor
-public class Agence {
+public class Agency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
-    private String name;
+    private String agency_code;
 
-    @OneToMany(mappedBy = "agence")
-    private List<Affaire> affaires;
+    @OneToMany(mappedBy = "agency")
+    private Collection<Affair> affairs = new HashSet<>();
 
-    @OneToMany(mappedBy = "agence")
-    private List<Employe> employes;
+    @OneToMany(mappedBy = "agency")
+    private Collection<EmployeeDetails> employeeDetailsList = new HashSet<>();
 
 }

@@ -1,16 +1,16 @@
 package com.example.AffairsManagementApp.entities;
 
-import com.example.AffairsManagementApp.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TYPE", length = 10)
 @Data @AllArgsConstructor @NoArgsConstructor
-public abstract class Utilisateur {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +29,18 @@ public abstract class Utilisateur {
 
     @Column(nullable = false)
     private String lastName;
+
+    // this is the owning side
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // here we will create a join table
+    @JoinTable(
+            name = "users_role", // name of the join table
+            joinColumns = @JoinColumn(name = "appUser_id"),// Foreign key in the join table for Course
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Collection<Role> roles  = new HashSet<>();
+
+    @OneToOne(mappedBy = "appUser")
+    private EmployeeDetails employeeDetails;
 
 }
