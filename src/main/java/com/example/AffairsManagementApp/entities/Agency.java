@@ -1,5 +1,6 @@
 package com.example.AffairsManagementApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,9 +20,11 @@ public class Agency {
     private String agency_code;
 
     @OneToMany(mappedBy = "agency")
+    @JsonIgnore
     private Collection<Affair> affairs = new HashSet<>();
 
     @OneToMany(mappedBy = "agency")
+    @JsonIgnore
     private Collection<EmployeeDetails> employeeDetailsList = new HashSet<>();
 
 }

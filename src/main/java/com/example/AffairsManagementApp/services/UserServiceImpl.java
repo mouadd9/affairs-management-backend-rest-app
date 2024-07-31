@@ -1,6 +1,5 @@
 package com.example.AffairsManagementApp.services;
 
-import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
@@ -8,7 +7,6 @@ import com.example.AffairsManagementApp.entities.Agency;
 import com.example.AffairsManagementApp.entities.AppUser;
 import com.example.AffairsManagementApp.entities.EmployeeDetails;
 import com.example.AffairsManagementApp.entities.Role;
-import com.example.AffairsManagementApp.mappers.AgencyMapper;
 import com.example.AffairsManagementApp.mappers.RoleMapper;
 import com.example.AffairsManagementApp.mappers.UserMapper;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
@@ -17,6 +15,7 @@ import com.example.AffairsManagementApp.repositories.Rolerepository;
 import com.example.AffairsManagementApp.repositories.Userrepository;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +27,13 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private Agencyrepository agencyrepository;
-    private UserMapper userMapper;
-    private Rolerepository rolerepository;
-    private EmployeeDetailsrepository employeeDetailsrepository;
-    private Userrepository userrepository;
-    private RoleMapper roleMapper;
+    private final Agencyrepository agencyrepository;
+    private final UserMapper userMapper;
+    private final Rolerepository rolerepository;
+    private final EmployeeDetailsrepository employeeDetailsrepository;
+    private final Userrepository userrepository;
+    private final RoleMapper roleMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<RoleDTO> addAgencyEmployeeRoleToUser(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException,RoleAlreadyAssignedToThisUser, AgencyNotFoundException {
@@ -87,6 +87,8 @@ public class UserServiceImpl implements UserService {
 
         // conversion DTO --> Entity
         AppUser appUser = userMapper.convertToEntity(userDTO);
+        String pw = appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(pw));
         appUser.getRoles().add(role);
         AppUser savedAppUser = userrepository.save(appUser);
         // now that i have my role added i should add an entry to the Employee details
@@ -105,6 +107,8 @@ public class UserServiceImpl implements UserService {
              throw new UserAlreadyExistsException("appUser already exists");
         }
         AppUser appUser = userMapper.convertToEntity(userDTO);
+        String pw = appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(pw));
         return userMapper.convertToDTO(userrepository.save(appUser));
     }
 

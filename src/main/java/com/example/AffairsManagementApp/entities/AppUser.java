@@ -1,5 +1,7 @@
 package com.example.AffairsManagementApp.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +24,8 @@ public class AppUser {
     private String email;
 
     @Column(nullable = false)
-    private String password;  // Ideally handled through Keycloak
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
     @Column(nullable = false)
     private String firstName;
@@ -35,9 +38,10 @@ public class AppUser {
     // here we will create a join table
     @JoinTable(
             name = "users_role", // name of the join table
-            joinColumns = @JoinColumn(name = "appUser_id"),// Foreign key in the join table for Course
+            joinColumns = @JoinColumn(name = "appUser_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+
     private Collection<Role> roles  = new HashSet<>();
 
     @OneToOne(mappedBy = "appUser")

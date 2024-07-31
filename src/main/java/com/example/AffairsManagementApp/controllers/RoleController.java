@@ -5,6 +5,7 @@ import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.RoleAlreadyExistsException;
 import com.example.AffairsManagementApp.Exceptions.UserIdNotFoundException;
 import com.example.AffairsManagementApp.services.RoleService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/role")
 public class RoleController {
     private final RoleService roleService;
-
-    @Autowired
-    public RoleController(RoleService roleService){
-        this.roleService = roleService;
-    }
-
     // create a non-existing role
     @PostMapping("/add/{roleName}")
     public ResponseEntity<RoleDTO> addNewRole(@PathVariable(name = "roleName") String roleName){

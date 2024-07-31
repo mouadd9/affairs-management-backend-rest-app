@@ -6,6 +6,7 @@ import com.example.AffairsManagementApp.services.AgencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,7 @@ public class AgencyController {
 
     // create a new agency
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_AGENCY_EMPLOYEE')")
     public ResponseEntity<AgencyDTO> createAgency(@RequestBody AgencyDTO agency) {
         AgencyDTO newAgency = agencyService.createAgency(agency);
         return ResponseEntity.ok(newAgency);
