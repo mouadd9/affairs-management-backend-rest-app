@@ -27,7 +27,7 @@ public interface UserService {
     // adding users
     UserDTO addAgencyEmployee(UserDTO userDTO, Long agencyId) throws AgencyNotFoundException, RoleNotFoundException, UserAlreadyExistsException;
     UserDTO addUser(UserDTO userDTO) throws UserAlreadyExistsException;
-
+    UserDTO addAdmin(UserDTO userDTO) throws UserAlreadyExistsException, RoleNotFoundException;
     // updating roles so when adding or removing roles
     // in the ui the roles to add or remove are updated get role by user
     List<RoleDTO> addAgencyEmployeeRoleToUser(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException, RoleAlreadyAssignedToThisUser , AgencyNotFoundException;

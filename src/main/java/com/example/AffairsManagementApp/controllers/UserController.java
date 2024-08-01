@@ -56,6 +56,22 @@ public class UserController {
 
     }
 
+    // Adds a Admin without any roles.
+    @PostMapping("/admin")
+    public ResponseEntity<UserDTO> addAdmin(@RequestBody UserDTO userDTO){
+        try {
+            // now we will call the userService to add a user to the user table without setting a role
+            UserDTO savedUser = userService.addAdmin(userDTO);
+            return new ResponseEntity<>(savedUser,HttpStatus.OK );
+        } catch (UserAlreadyExistsException e){
+            // if the user already exists
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        } catch (RoleNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
     // list all users
 
     @GetMapping("/all")

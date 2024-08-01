@@ -113,6 +113,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO addAdmin(UserDTO userDTO) throws UserAlreadyExistsException, RoleNotFoundException {
+        // first we check if the appUser is already registered
+        if(userrepository.findByUsername(userDTO.getUsername()).isPresent() || userrepository.findByEmail(userDTO.getEmail()).isPresent()){
+            throw new UserAlreadyExistsException("appUser already exists");
+        }
+        AppUser appUser = userMapper.convertToEntity(userDTO);
+        String pw = appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(pw));
+        Role role = rolerepository.findByRoleName("ADMIN")
+                .orElseThrow(() -> new RoleNotFoundException("role with the name AGENCY_EMPLOYEE not found"));
+
+        appUser.getRoles().add(role);
+        return userMapper.convertToDTO(userrepository.save(appUser));
+    }
+
+    @Override
     public List<UserDTO> getAllUsers() {
         List<AppUser> appUsers = userrepository.findAll();
         List<UserDTO> userDTOS = appUsers.stream().map(user -> userMapper.convertToDTO(user)).toList();

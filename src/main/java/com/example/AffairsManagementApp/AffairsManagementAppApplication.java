@@ -36,9 +36,10 @@ public class AffairsManagementAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AffairsManagementAppApplication.class, args);
 	}
-
+/*
 	@Bean
 	CommandLineRunner createInitialUser() {
+
 		return args -> {
 			roleService.addRole("ADMIN");
 			roleService.addRole("AGENCY_EMPLOYEE");
@@ -68,9 +69,11 @@ public class AffairsManagementAppApplication {
 			System.out.println("Default admin user created: admin");
 
 		};
+
+ */
 	}
 
 
 
 
-}
+
