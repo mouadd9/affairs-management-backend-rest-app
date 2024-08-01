@@ -28,7 +28,8 @@ public class UserController {
 
    // create an agency employee and assigns Agency role automatically.
    @PostMapping("/agency_employee/{agencyId}")
-    public ResponseEntity<UserDTO> addEmployee(@RequestBody UserDTO userDTO, @PathVariable (name = "agencyId") Long agencyId) {
+   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+   public ResponseEntity<UserDTO> addEmployee(@RequestBody UserDTO userDTO, @PathVariable (name = "agencyId") Long agencyId) {
         try {
             UserDTO savedEmployee = userService.addAgencyEmployee(userDTO,agencyId);
             return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
@@ -44,6 +45,7 @@ public class UserController {
 
    // Adds a user without any roles.
     @PostMapping("/user")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
        try {
            // now we will call the userService to add a user to the user table without setting a role
@@ -58,6 +60,7 @@ public class UserController {
 
     // Adds a Admin without any roles.
     @PostMapping("/admin")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserDTO> addAdmin(@RequestBody UserDTO userDTO){
         try {
             // now we will call the userService to add a user to the user table without setting a role
@@ -75,7 +78,7 @@ public class UserController {
     // list all users
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('SCOPE_AGENCY_EMPLOYEE')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers(){
        List<UserDTO> allUsers = userService.getAllUsers();
        return new ResponseEntity<>(allUsers, HttpStatus.OK);
@@ -83,6 +86,7 @@ public class UserController {
 
     // get an employee's agency
     @GetMapping("/agency/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> getAgencyByEmployee(@PathVariable Long userId){
        try {
            AgencyDTO agencyDTO = employeeDetailsService.getAgencyByUserId(userId);
@@ -97,6 +101,7 @@ public class UserController {
 
     // assign agency employee role to a user with no role or with (admin/backoffice) role
     @PostMapping("/{userId}/agencies/{agencyId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<RoleDTO>> addAgencyEmployeeRoleToUser(@PathVariable Long userId, @PathVariable Long agencyId){
        try {
            List<RoleDTO> roleDTOS = userService.addAgencyEmployeeRoleToUser(userId, agencyId);

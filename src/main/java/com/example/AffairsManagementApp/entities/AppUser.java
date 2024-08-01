@@ -35,16 +35,16 @@ public class AppUser {
 
     // this is the owning side
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    // here we will create a join table
-    @JoinTable(
-            name = "users_role", // name of the join table
-            joinColumns = @JoinColumn(name = "appUser_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-
     private Collection<Role> roles  = new HashSet<>();
 
     @OneToOne(mappedBy = "appUser")
     private EmployeeDetails employeeDetails;
+
+    /*// here we will create a join table
+    @JoinTable(
+            name = "users_role", // name of the join table
+            joinColumns = @JoinColumn(name = "appUser_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )*/
 
 }

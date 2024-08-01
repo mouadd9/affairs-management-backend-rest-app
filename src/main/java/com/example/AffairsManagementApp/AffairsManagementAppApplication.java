@@ -36,8 +36,8 @@ public class AffairsManagementAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AffairsManagementAppApplication.class, args);
 	}
-/*
-	@Bean
+
+	/*@Bean
 	CommandLineRunner createInitialUser() {
 
 		return args -> {
@@ -48,9 +48,9 @@ public class AffairsManagementAppApplication {
 			agencyService.createAgency(agencyDTO);
 
 			UserDTO userDTO = new UserDTO();
-			userDTO.setUsername("Mouad");
+			userDTO.setUsername("Admin");
 			userDTO.setPassword("123");
-			userDTO.setEmail("jshkjo");
+			userDTO.setEmail("admin@gmail.com");
 			userDTO.setFirstName("test");
 			userDTO.setLastName("test");
 			int intUserId = 1;
@@ -59,18 +59,14 @@ public class AffairsManagementAppApplication {
 // Convert int to Long
 			Long userId = Long.valueOf(intUserId);
 
-			userService.addAgencyEmployee(userDTO,userId );
-
-
-
-
+			userService.addAdmin(userDTO);
 
 
 			System.out.println("Default admin user created: admin");
 
 		};
 
- */
+	} */
 	}
 
 

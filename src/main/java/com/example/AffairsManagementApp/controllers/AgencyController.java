@@ -20,13 +20,14 @@ public class AgencyController {
 
     // create a new agency
     @PostMapping("/")
-    @PreAuthorize("hasAuthority('SCOPE_AGENCY_EMPLOYEE')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> createAgency(@RequestBody AgencyDTO agency) {
         AgencyDTO newAgency = agencyService.createAgency(agency);
         return ResponseEntity.ok(newAgency);
     }
 
     // retrieve all agencies
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/agencies")
     public ResponseEntity<List<AgencyDTO>> getAllAgencies() {
 
@@ -36,6 +37,7 @@ public class AgencyController {
 
     // retrieve a specific agency by ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> getAgencyById(@PathVariable(name = "id") Long id) {
         try {
             AgencyDTO agencyDTO = agencyService.getAgencyById(id);
