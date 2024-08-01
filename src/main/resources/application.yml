@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: AffairsManagementApp
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb  # PostgreSQL database URL
+    username: postgres  # Database username
+    password: password  # Database password
+    driver-class-name: org.postgresql.Driver  # PostgreSQL JDBC driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # Automatically update the schema
+    database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL dialect
+    show-sql: true  # Show SQL statements in the console
+
+server:
+  port: 8085  # Application will run on port 8085
+
+rsa:
+  public-key: classpath:certs/public.pem  # Path to the public key for RSA
+  private-key: classpath:certs/private.pem  # Path to the private key for RSA
