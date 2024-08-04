@@ -10,12 +10,12 @@ public class AgencyMapper {
     public AgencyDTO convertToDTO(@NotNull Agency agency){
         AgencyDTO agencyDTO = new AgencyDTO();
         agencyDTO.setId(agency.getId());
-        agencyDTO.setAgency_code(agency.getAgency_code());
+        agencyDTO.setAgencyCode(agency.getAgencyCode());
         return agencyDTO;
     }
     public Agency convertToEntity(@NotNull AgencyDTO agencyDTO){
         Agency agency = new Agency();
-        agency.setAgency_code(agencyDTO.getAgency_code());
+        agency.setAgencyCode(agencyDTO.getAgencyCode());
         return agency;
     }
 }

@@ -17,14 +17,14 @@ public class Agency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
-    private String agency_code;
+
+    @Column(unique = true)
+    private String agencyCode;
 
     @OneToMany(mappedBy = "agency")
-    @JsonIgnore
     private Collection<Affair> affairs = new HashSet<>();
 
     @OneToMany(mappedBy = "agency")
-    @JsonIgnore
     private Collection<EmployeeDetails> employeeDetailsList = new HashSet<>();
 
 }
