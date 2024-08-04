@@ -1,27 +1,16 @@
 package com.example.AffairsManagementApp;
-import com.example.AffairsManagementApp.DTOs.AgencyDTO;
-import com.example.AffairsManagementApp.DTOs.RoleDTO;
-import com.example.AffairsManagementApp.DTOs.UserDTO;
-import com.example.AffairsManagementApp.entities.AppUser;
-import com.example.AffairsManagementApp.entities.Role;
 import com.example.AffairsManagementApp.mappers.RoleMapper;
 import com.example.AffairsManagementApp.repositories.Userrepository;
 import com.example.AffairsManagementApp.security.RsaKeyProperties;
-import com.example.AffairsManagementApp.services.AgencyService;
-import com.example.AffairsManagementApp.services.RoleService;
-import com.example.AffairsManagementApp.services.UserService;
+import com.example.AffairsManagementApp.services.interfaces.AgencyService;
+import com.example.AffairsManagementApp.services.interfaces.RoleService;
+import com.example.AffairsManagementApp.services.interfaces.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.stream.Collectors;
 @EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
 @ComponentScan @AllArgsConstructor

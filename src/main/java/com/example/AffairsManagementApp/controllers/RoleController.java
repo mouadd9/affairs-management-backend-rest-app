@@ -1,12 +1,10 @@
 package com.example.AffairsManagementApp.controllers;
 
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
-import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.RoleAlreadyExistsException;
 import com.example.AffairsManagementApp.Exceptions.UserIdNotFoundException;
-import com.example.AffairsManagementApp.services.RoleService;
+import com.example.AffairsManagementApp.services.interfaces.RoleService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
