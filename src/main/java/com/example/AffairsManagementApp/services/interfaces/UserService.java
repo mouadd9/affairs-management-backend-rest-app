@@ -1,4 +1,4 @@
-package com.example.AffairsManagementApp.services;
+package com.example.AffairsManagementApp.services.interfaces;
 
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;

@@ -1,4 +1,4 @@
-package com.example.AffairsManagementApp.services;
+package com.example.AffairsManagementApp.services.implementations;
 
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
@@ -13,6 +13,7 @@ import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import com.example.AffairsManagementApp.repositories.EmployeeDetailsrepository;
 import com.example.AffairsManagementApp.repositories.Rolerepository;
 import com.example.AffairsManagementApp.repositories.Userrepository;
+import com.example.AffairsManagementApp.services.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.password.PasswordEncoder;

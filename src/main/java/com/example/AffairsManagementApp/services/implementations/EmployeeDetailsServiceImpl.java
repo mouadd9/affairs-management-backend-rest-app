@@ -1,4 +1,4 @@
-package com.example.AffairsManagementApp.services;
+package com.example.AffairsManagementApp.services.implementations;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.UserIdNotFoundException;
@@ -6,6 +6,7 @@ import com.example.AffairsManagementApp.entities.Agency;
 import com.example.AffairsManagementApp.entities.EmployeeDetails;
 import com.example.AffairsManagementApp.mappers.AgencyMapper;
 import com.example.AffairsManagementApp.repositories.EmployeeDetailsrepository;
+import com.example.AffairsManagementApp.services.interfaces.EmployeeDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
