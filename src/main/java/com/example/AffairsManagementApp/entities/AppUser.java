@@ -37,7 +37,7 @@ public class AppUser {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<Role> roles  = new HashSet<>();
 
-    @OneToOne(mappedBy = "appUser")
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL)
     private EmployeeDetails employeeDetails;
 
     /*// here we will create a join table

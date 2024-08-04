@@ -146,4 +146,11 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException {
         return null;
     }
+
+    @Override
+    public void deleteUser(Long userId) throws UserIdNotFoundException {
+        AppUser appUserToDelete = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
+        userrepository.delete(appUserToDelete);
+    }
+
 }

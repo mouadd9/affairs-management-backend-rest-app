@@ -112,7 +112,19 @@ public class UserController {
        }
 
     }
-    // delete agency employee role to a user that has employee agency role
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> deleteAgency(@PathVariable(name = "id") Long userId){
+        try {
+            userService.deleteUser(userId);
+            // return ResponseEntity.noContent().build();
+            // return new ResponseEntity<>(null,HttpStatus.NO_CONTENT );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } catch (UserIdNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 
 }

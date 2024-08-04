@@ -36,5 +36,6 @@ public interface UserService {
     List<UserDTO> getAllUsers() ;
     AppUser getUserById(Long userId) throws UserIdNotFoundException;
     UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException;
+    void deleteUser(Long userId) throws UserIdNotFoundException;
 
 }
