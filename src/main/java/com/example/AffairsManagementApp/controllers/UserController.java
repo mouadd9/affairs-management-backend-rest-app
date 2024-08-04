@@ -4,15 +4,14 @@ import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
-import com.example.AffairsManagementApp.services.EmployeeDetailsService;
-import com.example.AffairsManagementApp.services.UserService;
+import com.example.AffairsManagementApp.services.interfaces.EmployeeDetailsService;
+import com.example.AffairsManagementApp.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 
