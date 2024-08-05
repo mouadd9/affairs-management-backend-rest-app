@@ -16,7 +16,6 @@ public class UserMapper {
         userDTO.setId(appUser.getId());
         userDTO.setEmail(appUser.getEmail());
         userDTO.setUsername(appUser.getUsername());
-        userDTO.setPassword(appUser.getPassword());
         return userDTO;
     }
     public AppUser convertToEntity(@NotNull UserDTO userDTO) {

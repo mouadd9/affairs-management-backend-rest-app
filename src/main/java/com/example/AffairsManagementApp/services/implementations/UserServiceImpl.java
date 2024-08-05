@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Transactional
+@Transactional // because our services interact with a db, this manages rolls back the entire method's operation if a constraint is violated
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Agencyrepository agencyrepository;
