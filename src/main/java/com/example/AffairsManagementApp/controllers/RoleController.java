@@ -7,17 +7,19 @@ import com.example.AffairsManagementApp.services.interfaces.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/role")
+@RequestMapping("/api/roles")
 public class RoleController {
     private final RoleService roleService;
-    // create a non-existing role
-    @PostMapping("/add/{roleName}")
+
+    @PostMapping("/{roleName}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<RoleDTO> addNewRole(@PathVariable(name = "roleName") String roleName){
         try {
             RoleDTO roleDTO = roleService.addRole(roleName);
@@ -30,16 +32,17 @@ public class RoleController {
     }
 
    // get all roles
-    @GetMapping("/roles")
+    @GetMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<RoleDTO>> getAllRoles(){
         List<RoleDTO> roleDTOS = roleService.getAllRoles();
         return new ResponseEntity<>(roleDTOS, HttpStatus.OK);
     }
 
     // get roles by user
-    @GetMapping("/roles/{userId}")
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<RoleDTO>> getRolesByUserId(@PathVariable Long userId){
-        // now we need to catch the exception to send a personalised response
         try {
             List<RoleDTO> roleDTOS = roleService.getRolesByUserId(userId);
             return new ResponseEntity<>(roleDTOS, HttpStatus.OK); // here we put the body and the status

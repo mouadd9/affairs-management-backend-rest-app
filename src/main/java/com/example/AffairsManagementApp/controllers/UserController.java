@@ -1,11 +1,11 @@
 package com.example.AffairsManagementApp.controllers;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
-import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
 import com.example.AffairsManagementApp.services.interfaces.EmployeeDetailsService;
 import com.example.AffairsManagementApp.services.interfaces.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,83 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private EmployeeDetailsService employeeDetailsService;
+    private final UserService userService;
+    private final EmployeeDetailsService employeeDetailsService;
+
+    @PostMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
+        try {
+            // now we will call the userService to add a user to the user table without setting a role
+            UserDTO savedUser = userService.addUser(userDTO);
+            return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
+        } catch (UserAlreadyExistsException e){
+            // if the user already exists
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping("/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> addAdminRole(@PathVariable(name = "userId" ) Long userId){
+        try {
+            userService.addAdminRole(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (UserIdNotFoundException | RoleNotFoundException e ){
+            // if the user already exists
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
+
+    @PutMapping("/{userId}/agencies/{agencyId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> addAgencyEmployeeRole(@PathVariable Long userId, @PathVariable Long agencyId){
+        try {
+            userService.addAgencyEmployeeRole(userId, agencyId);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch(RoleNotFoundException | UserIdNotFoundException | AgencyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 
-   // create an agency employee and assigns Agency role automatically.
+    @GetMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
+        List<UserDTO> allUsers = userService.getAllUsers();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    // get an employee's agency
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<AgencyDTO> getAgencyByEmployee(@PathVariable Long userId){
+        try {
+            AgencyDTO agencyDTO = employeeDetailsService.getAgencyByUserId(userId);
+            return new ResponseEntity<>(agencyDTO, HttpStatus.OK);
+
+        } catch( UserIdNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> deleteAgency(@PathVariable(name = "id") Long userId){
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } catch (UserIdNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+  /* // create an agency employee and assigns Agency role automatically.
    @PostMapping("/agency_employee/{agencyId}")
    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
    public ResponseEntity<UserDTO> addEmployee(@RequestBody UserDTO userDTO, @PathVariable (name = "agencyId") Long agencyId) {
@@ -39,92 +106,5 @@ public class UserController {
             // if the user already exists
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
-    }
-
-
-   // Adds a user without any roles.
-    @PostMapping("/user")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
-       try {
-           // now we will call the userService to add a user to the user table without setting a role
-           UserDTO savedUser = userService.addUser(userDTO);
-           return new ResponseEntity<>(savedUser,HttpStatus.OK );
-       } catch (UserAlreadyExistsException e){
-           // if the user already exists
-           return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-       }
-
-    }
-
-    // Adds a Admin without any roles.
-    @PostMapping("/admin")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<UserDTO> addAdmin(@RequestBody UserDTO userDTO){
-        try {
-            // now we will call the userService to add a user to the user table without setting a role
-            UserDTO savedUser = userService.addAdmin(userDTO);
-            return new ResponseEntity<>(savedUser,HttpStatus.OK );
-        } catch (UserAlreadyExistsException e){
-            // if the user already exists
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-        } catch (RoleNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-
-    }
-
-    // list all users
-
-    @GetMapping("/all")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
-       List<UserDTO> allUsers = userService.getAllUsers();
-       return new ResponseEntity<>(allUsers, HttpStatus.OK);
-    }
-
-    // get an employee's agency
-    @GetMapping("/agency/{userId}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<AgencyDTO> getAgencyByEmployee(@PathVariable Long userId){
-       try {
-           AgencyDTO agencyDTO = employeeDetailsService.getAgencyByUserId(userId);
-           return new ResponseEntity<>(agencyDTO, HttpStatus.OK);
-
-       } catch( UserIdNotFoundException e){
-           return ResponseEntity.notFound().build();
-       }
-    }
-
-    // list agency employees
-
-    // assign agency employee role to a user with no role or with (admin/backoffice) role
-    @PostMapping("/{userId}/agencies/{agencyId}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<List<RoleDTO>> addAgencyEmployeeRoleToUser(@PathVariable Long userId, @PathVariable Long agencyId){
-       try {
-           List<RoleDTO> roleDTOS = userService.addAgencyEmployeeRoleToUser(userId, agencyId);
-           return new ResponseEntity<>(roleDTOS, HttpStatus.OK);
-       } catch(RoleNotFoundException | UserIdNotFoundException | AgencyNotFoundException e) {
-           return ResponseEntity.notFound().build();
-       } catch(RoleAlreadyAssignedToThisUser e){
-           return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-       }
-
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<Void> deleteAgency(@PathVariable(name = "id") Long userId){
-        try {
-            userService.deleteUser(userId);
-            // return ResponseEntity.noContent().build();
-            // return new ResponseEntity<>(null,HttpStatus.NO_CONTENT );
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-        } catch (UserIdNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-
+    } */
 }

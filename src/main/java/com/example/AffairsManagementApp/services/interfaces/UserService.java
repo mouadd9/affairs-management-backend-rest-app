@@ -24,18 +24,19 @@ public interface UserService {
     // then save
 
 
-    // adding users
-    UserDTO addAgencyEmployee(UserDTO userDTO, Long agencyId) throws AgencyNotFoundException, RoleNotFoundException, UserAlreadyExistsException;
+    // List<RoleDTO> removeRoleFromUser(Long userId, String roleName) throws RoleNotFoundException, UserIdNotFoundException, RoleAlreadyRetrievedFromThisUser;
+    // UserDTO addAdmin(UserDTO userDTO) throws UserAlreadyExistsException, RoleNotFoundException;
+    // UserDTO addAgencyEmployee(UserDTO userDTO, Long agencyId) throws AgencyNotFoundException, RoleNotFoundException, UserAlreadyExistsException;
+
+
     UserDTO addUser(UserDTO userDTO) throws UserAlreadyExistsException;
-    UserDTO addAdmin(UserDTO userDTO) throws UserAlreadyExistsException, RoleNotFoundException;
-    // updating roles so when adding or removing roles
-    // in the ui the roles to add or remove are updated get role by user
-    List<RoleDTO> addAgencyEmployeeRoleToUser(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException, RoleAlreadyAssignedToThisUser , AgencyNotFoundException;
-   // List<RoleDTO> removeRoleFromUser(Long userId, String roleName) throws RoleNotFoundException, UserIdNotFoundException, RoleAlreadyRetrievedFromThisUser;
+    void addAgencyEmployeeRole(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException , AgencyNotFoundException;
+    void addAdminRole(Long userId) throws UserIdNotFoundException, RoleNotFoundException;
     // retrieving users
     List<UserDTO> getAllUsers() ;
     AppUser getUserById(Long userId) throws UserIdNotFoundException;
     UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException;
+    // deletion
     void deleteUser(Long userId) throws UserIdNotFoundException;
 
 }

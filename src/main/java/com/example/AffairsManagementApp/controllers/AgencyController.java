@@ -6,7 +6,7 @@ import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 import com.example.AffairsManagementApp.services.interfaces.AgencyService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/agencies")
 public class AgencyController {
-    @Autowired
-    private AgencyService agencyService;
+
+    private final AgencyService agencyService;
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")

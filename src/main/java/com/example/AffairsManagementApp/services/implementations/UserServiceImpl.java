@@ -36,45 +36,93 @@ public class UserServiceImpl implements UserService {
     private final RoleMapper roleMapper;
     private final PasswordEncoder passwordEncoder;
 
+
+    // 1 add user
     @Override
-    public List<RoleDTO> addAgencyEmployeeRoleToUser(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException,RoleAlreadyAssignedToThisUser, AgencyNotFoundException {
-        // first we check if the role, AppUser and agency exist if so we store them
-        AppUser appuser = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("user not found"));
+    public UserDTO addUser(@NotNull UserDTO userDTO) throws UserAlreadyExistsException {
+        // check if user exists by username
+        // add user
+        if(userrepository.findByUsername(userDTO.getUsername()).isPresent() || userrepository.findByEmail(userDTO.getEmail()).isPresent()){
+            throw new UserAlreadyExistsException("appUser already exists");
+        }
+        AppUser appUser = userMapper.convertToEntity(userDTO);
+        String pw = appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(pw));
+        return userMapper.convertToDTO(userrepository.save(appUser));
+    }
+
+    // 2 add the role ADMIN to an existing AppUser
+    @Override
+    public void addAdminRole(Long userId) throws UserIdNotFoundException, RoleNotFoundException {
+        // retrieve user -> check if exists
+        // retrieve role -> check if exists
+        // add role to user
+        AppUser appUser = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("user not found"));
+        Role existingRole = rolerepository.findByRoleName("ADMIN").orElseThrow(()->new RoleNotFoundException("role not found"));
+        // here we will check if the role exists already using .contains to check if an element is in a list
+        if (!appUser.getRoles().contains(existingRole)){
+            appUser.getRoles().add(existingRole);
+            userrepository.save(appUser);
+        }
+
+    }
+
+    // 3 add the role AGENCY_EMPLOYEE to an existing AppUser
+    @Override
+    public void addAgencyEmployeeRole(Long userId, Long agencyId) throws RoleNotFoundException, UserIdNotFoundException, AgencyNotFoundException {
+
+        // retrieve user -> check if exists
+        // retrieve agency -> check if exists
+        // retrieve role -> check if exists
+        // add role to user
+
+        AppUser appUser = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("user not found"));
         Agency agency = agencyrepository.findById(agencyId).orElseThrow(()->new AgencyNotFoundException("agency not found"));
         Role existingRole = rolerepository.findByRoleName("AGENCY_EMPLOYEE").orElseThrow(()->new RoleNotFoundException("role not found"));
-        // if then we check if the user has the AGENCY_EMPLOYEE role
-            // we store the array
-        List<Role> roles = appuser.getRoles().stream().toList();
-            // we check if the role does exist in role array belonging to our app user
-        if(roles.stream().anyMatch(role-> existingRole.getRoleName().equals(role.getRoleName()))){
-             throw new RoleAlreadyAssignedToThisUser("role already assigned");
-        }
-        // if we passed these checks then :
-        // our app user does exist
-        // our agency does exist
-        // the role we want to add does exist
-        // the user does not have the role yet
 
-        // so now we must add the role to our user
-        appuser.getRoles().add(existingRole);
-        // then we save our user
-        AppUser savedUser = userrepository.save(appuser);
-        // then we must add an entry in our
-        EmployeeDetails employeeDetails = new EmployeeDetails();
-        employeeDetails.setAppUser(appuser);
-        employeeDetails.setAgency(agency);
-        employeeDetailsrepository.save(employeeDetails);
-        List<RoleDTO> roleDTOS= appuser.getRoles().stream().map(role -> roleMapper.convertToDTO(role)).collect(Collectors.toList());
-        // return all roles
-        return roleDTOS;
+        if (!appUser.getRoles().contains(existingRole)){
+            appUser.getRoles().add(existingRole); // we add the role
+            userrepository.save(appUser); // we save the user so no problems occur regarding existence checks
+            EmployeeDetails employeeDetails = new EmployeeDetails();
+            employeeDetails.setAppUser(appUser);
+            employeeDetails.setAgency(agency);
+            employeeDetailsrepository.save(employeeDetails);
+        }
     }
+
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<AppUser> appUsers = userrepository.findAll();
+        // return appUsers.stream().map(user -> userMapper.convertToDTO(user)).toList();
+        return appUsers.stream().map(userMapper::convertToDTO).toList();
+    }
+
+    @Override
+    public AppUser getUserById(Long userId) throws UserIdNotFoundException {
+        return userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
+    }
+
+    @Override
+    public UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException {
+        return null;
+    }
+
+
+    @Override
+    public void deleteUser(Long userId) throws UserIdNotFoundException {
+        AppUser appUserToDelete = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
+        userrepository.delete(appUserToDelete);
+    }
+
+
 
    /* @Override
     public List<RoleDTO> removeRoleFromUser(Long userId, String roleName) throws RoleNotFoundException, UserIdNotFoundException, RoleAlreadyRetrievedFromThisUser {
         return List.of();
     } */
 
-    @Override
+   /* @Override
     public UserDTO addAgencyEmployee(UserDTO userDTO, Long agencyId) throws AgencyNotFoundException, RoleNotFoundException, UserAlreadyExistsException {
         // we check if the appUser already exists
         if (userrepository.findByUsername(userDTO.getUsername()).isPresent() || userrepository.findByEmail(userDTO.getEmail()).isPresent()) {
@@ -99,58 +147,14 @@ public class UserServiceImpl implements UserService {
         employeeDetailsrepository.save(employeeDetails);
 
         return userMapper.convertToDTO(savedAppUser);
-    }
+    }*/
 
-    @Override
-    public UserDTO addUser(@NotNull UserDTO userDTO) throws UserAlreadyExistsException {
-        // first we check if the appUser is already registered
-        if(userrepository.findByUsername(userDTO.getUsername()).isPresent() || userrepository.findByEmail(userDTO.getEmail()).isPresent()){
-             throw new UserAlreadyExistsException("appUser already exists");
-        }
-        AppUser appUser = userMapper.convertToEntity(userDTO);
-        String pw = appUser.getPassword();
-        appUser.setPassword(passwordEncoder.encode(pw));
-        return userMapper.convertToDTO(userrepository.save(appUser));
-    }
 
-    @Override
-    public UserDTO addAdmin(UserDTO userDTO) throws UserAlreadyExistsException, RoleNotFoundException {
-        // first we check if the appUser is already registered
-        if(userrepository.findByUsername(userDTO.getUsername()).isPresent() || userrepository.findByEmail(userDTO.getEmail()).isPresent()){
-            throw new UserAlreadyExistsException("appUser already exists");
-        }
-        AppUser appUser = userMapper.convertToEntity(userDTO);
-        String pw = appUser.getPassword();
-        appUser.setPassword(passwordEncoder.encode(pw));
-        Role role = rolerepository.findByRoleName("ADMIN")
-                .orElseThrow(() -> new RoleNotFoundException("role with the name AGENCY_EMPLOYEE not found"));
 
-        appUser.getRoles().add(role);
-        return userMapper.convertToDTO(userrepository.save(appUser));
-    }
 
-    @Override
-    public List<UserDTO> getAllUsers() {
-        List<AppUser> appUsers = userrepository.findAll();
-        List<UserDTO> userDTOS = appUsers.stream().map(user -> userMapper.convertToDTO(user)).toList();
-        return userDTOS;
-    }
 
-    @Override
-    public AppUser getUserById(Long userId) throws UserIdNotFoundException {
-        AppUser appUser = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
-        return appUser;
-    }
 
-    @Override
-    public UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException {
-        return null;
-    }
 
-    @Override
-    public void deleteUser(Long userId) throws UserIdNotFoundException {
-        AppUser appUserToDelete = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
-        userrepository.delete(appUserToDelete);
-    }
+
 
 }
