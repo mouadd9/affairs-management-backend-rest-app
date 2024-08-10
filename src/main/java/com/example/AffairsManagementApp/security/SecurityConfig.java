@@ -26,6 +26,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -74,6 +77,7 @@ public class SecurityConfig  {
                 .sessionManagement(sm->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // each request must provide its own authentication token
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 //.httpBasic(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .oauth2ResourceServer(oa-> oa.jwt(Customizer.withDefaults())) /*This part ensures that the JWT token is validated. This involves checking the token’s signature, expiration, and claims.*/
@@ -122,6 +126,32 @@ public class SecurityConfig  {
         return new NimbusJwtEncoder(jwkSource);
 
 
+    }
+
+
+    // handling requests coming from browsers with CORS
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+
+
+        /*Cross-Origin Resource Sharing (CORS) is a security
+         feature that allows browser-based requests using AJAX.
+         CORS helps keep web interactions secure while allowing
+         necessary communication between different websites.*/
+
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration(); // a class provided by Spring that holds the CORS configuration settings
+        // we will allow all origins to access our apis
+        corsConfiguration.addAllowedOrigin("*");
+        // This allows all HTTP methods (GET, POST, PUT, DELETE, etc.) from any origin to be executed.
+        corsConfiguration.addAllowedMethod("*");
+        // This allows any HTTP header to be included in the request from the client.
+        corsConfiguration.addAllowedHeader("*");
+
+        // corsConfiguration.setExposedHeaders(List.of("x-auth-token"));
+         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 
 
