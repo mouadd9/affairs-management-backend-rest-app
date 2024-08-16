@@ -2,8 +2,11 @@ package com.example.AffairsManagementApp.mappers;
 
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.entities.AppUser;
+import com.example.AffairsManagementApp.entities.Role;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
@@ -16,6 +19,10 @@ public class UserMapper {
         userDTO.setId(appUser.getId());
         userDTO.setEmail(appUser.getEmail());
         userDTO.setUsername(appUser.getUsername());
+        // Convert roles to a collection of role names
+        userDTO.setRoles(appUser.getRoles().stream()
+                .map(Role::getRoleName)
+                .collect(Collectors.toList()));
         return userDTO;
     }
     public AppUser convertToEntity(@NotNull UserDTO userDTO) {
