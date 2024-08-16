@@ -83,7 +83,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<Void> deleteAgency(@PathVariable(name = "id") Long userId){
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long userId){
         try {
             userService.deleteUser(userId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

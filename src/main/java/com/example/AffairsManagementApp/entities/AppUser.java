@@ -34,10 +34,10 @@ public class AppUser {
     private String lastName;
 
     // this is the owning side
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles  = new HashSet<>();
 
-    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "appUser")
     private EmployeeDetails employeeDetails;
 
     /*// here we will create a join table

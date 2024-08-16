@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,7 +112,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) throws UserIdNotFoundException {
+        // we Fetch the user to be deleted
         AppUser appUserToDelete = userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
+        // Iterate through the user's roles
+        //For each role, remove the user from the role's collection of users
+        appUserToDelete.getRoles().forEach(role -> role.getAppUsers().remove(appUserToDelete));
+        appUserToDelete.getRoles().clear();
+
+        // If there's an associated EmployeeDetails, remove it
+        if (appUserToDelete.getEmployeeDetails() != null) {
+            employeeDetailsrepository.delete(appUserToDelete.getEmployeeDetails());
+            appUserToDelete.setEmployeeDetails(null);
+        }
+
+
         userrepository.delete(appUserToDelete);
     }
 
