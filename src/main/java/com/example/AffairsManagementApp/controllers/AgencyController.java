@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -40,7 +41,7 @@ public class AgencyController {
     public ResponseEntity<?> getAllAgencies(@RequestParam(defaultValue = "false") Boolean countOnly) {
         if (countOnly) {
             // if we only need the count of agencies
-            long count = agencyService.getAgencyCount();
+            Map<String, Long> count = agencyService.getAgencyCount();
 
             return ResponseEntity.status(HttpStatus.OK).body(count);
 

@@ -6,6 +6,7 @@ import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AgencyService {
     AgencyDTO createAgency(AgencyDTO agencyDTO) throws AgencyCodeIsTakenException;
@@ -14,5 +15,5 @@ public interface AgencyService {
     AgencyDTO updateAgency(Long agencyId, AgencyDTO agencyDTO) throws AgencyNotFoundException, AgencyCodeIsTakenException;
     void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException;
 
-    long getAgencyCount();
+    Map<String, Long> getAgencyCount();
 }

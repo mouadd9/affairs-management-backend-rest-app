@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,8 +73,17 @@ public class AgencyServiceImpl implements AgencyService {
     }
 
     @Override
-    public long getAgencyCount() {
-        return agencyRepository.count();
+    public Map<String, Long> getAgencyCount() {
+        Map<String, Long> countsByAgency = new HashMap<>();
+        List<Agency> allAgencies = agencyRepository.findAll();
+        long emptyAgencies = allAgencies.stream().filter(agency -> agency.getEmployeeDetailsList().isEmpty()).count();
+
+        countsByAgency.put("empty", emptyAgencies);
+        countsByAgency.put("non_empty", (long) allAgencies.size() - emptyAgencies);
+        countsByAgency.put("total", (long) allAgencies.size());
+        // here we should iterate over agencies
+
+        return countsByAgency;
     }
 
 
