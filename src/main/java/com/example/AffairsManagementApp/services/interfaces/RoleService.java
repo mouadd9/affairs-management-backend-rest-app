@@ -13,4 +13,5 @@ public interface RoleService {
     Role getRole(String roleName) throws RoleNotFoundException;
     List<RoleDTO> getRolesByUserId(Long userId) throws UserIdNotFoundException;
     List<RoleDTO> getAllRoles();
+    Long getUsersCountByRole(String roleName) throws RoleNotFoundException;
 }

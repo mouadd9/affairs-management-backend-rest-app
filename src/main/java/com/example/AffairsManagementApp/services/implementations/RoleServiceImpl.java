@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,4 +63,14 @@ public class RoleServiceImpl implements RoleService {
         List<RoleDTO> roleDTOS = roles.stream().map(role -> roleMapper.convertToDTO(role)).collect(Collectors.toList());
         return roleDTOS;
     }
+
+    @Override
+    public Long getUsersCountByRole(String roleName) throws RoleNotFoundException {
+
+        Role role = rolerepository.findByRoleName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException("role with the name " + roleName + "not found"));
+        return  role.getAppUsers() != null ? (long) role.getAppUsers().size() : 0L;
+    }
+
+
 }

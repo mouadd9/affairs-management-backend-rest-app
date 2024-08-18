@@ -13,6 +13,7 @@ import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import com.example.AffairsManagementApp.repositories.EmployeeDetailsrepository;
 import com.example.AffairsManagementApp.repositories.Rolerepository;
 import com.example.AffairsManagementApp.repositories.Userrepository;
+import com.example.AffairsManagementApp.services.interfaces.RoleService;
 import com.example.AffairsManagementApp.services.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final EmployeeDetailsrepository employeeDetailsrepository;
     private final Userrepository userrepository;
     private final RoleMapper roleMapper;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -125,8 +129,27 @@ public class UserServiceImpl implements UserService {
             appUserToDelete.setEmployeeDetails(null);
         }
 
-
         userrepository.delete(appUserToDelete);
+    }
+
+    @Override
+    public Map<String, Long> getUserCounts() throws RoleNotFoundException{
+        Map<String, Long> countsByRole = new HashMap<>();
+
+        // so we will get all roles
+        // for each role we will see the number of users that it has
+        List<RoleDTO> roles = roleService.getAllRoles();
+
+        for (RoleDTO roleDTO : roles) {
+            Long count = roleService.getUsersCountByRole(roleDTO.getRoleName());
+            countsByRole.put(roleDTO.getRoleName(), count != null ? count : 0L);
+        }
+
+        countsByRole.put("sum", userrepository.count());
+
+        return countsByRole;
+
+
     }
 
 

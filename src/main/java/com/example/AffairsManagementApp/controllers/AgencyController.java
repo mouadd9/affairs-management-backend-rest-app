@@ -37,10 +37,22 @@ public class AgencyController {
 
     @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<List<AgencyDTO>> getAllAgencies() {
-        List<AgencyDTO> agencies = agencyService.getAllAgencies();
-        return ResponseEntity.ok(agencies);
-    }
+    public ResponseEntity<?> getAllAgencies(@RequestParam(defaultValue = "false") Boolean countOnly) {
+        if (countOnly) {
+            // if we only need the count of agencies
+            long count = agencyService.getAgencyCount();
+
+            return ResponseEntity.status(HttpStatus.OK).body(count);
+
+        } else {
+
+            List<AgencyDTO> agencies = agencyService.getAllAgencies();
+            return ResponseEntity.ok(agencies);
+
+        }
+
+
+    } // this will be used to get all agencies and put them in a table
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")

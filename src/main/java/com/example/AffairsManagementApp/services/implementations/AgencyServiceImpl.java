@@ -70,5 +70,10 @@ public class AgencyServiceImpl implements AgencyService {
         agencyRepository.delete(agencyToRemove);
     }
 
+    @Override
+    public long getAgencyCount() {
+        return agencyRepository.count();
+    }
+
 
 }

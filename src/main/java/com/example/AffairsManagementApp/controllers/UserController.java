@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -63,9 +64,27 @@ public class UserController {
 
     @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
-        List<UserDTO> allUsers = userService.getAllUsers();
-        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "false") Boolean countOnly){
+
+        if(countOnly){
+
+            try {
+
+
+                Map<String, Long> userCountsByRole = userService.getUserCounts(); // here we will return an object of type :
+                return ResponseEntity.status(HttpStatus.OK).body(userCountsByRole);
+            } catch (RoleNotFoundException e) {
+
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT); // if there is a user with no roles
+
+            }
+
+        } else {
+
+            List<UserDTO> allUsers = userService.getAllUsers();
+            return ResponseEntity.status(HttpStatus.OK).body(allUsers);
+        }
+
     }
 
     // get an employee's agency

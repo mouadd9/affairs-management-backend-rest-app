@@ -6,6 +6,7 @@ import com.example.AffairsManagementApp.Exceptions.*;
 import com.example.AffairsManagementApp.entities.AppUser;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     // here we will put the methods a site user would need
@@ -39,4 +40,5 @@ public interface UserService {
     // deletion
     void deleteUser(Long userId) throws UserIdNotFoundException;
 
+    Map<String, Long> getUserCounts() throws RoleNotFoundException;
 }

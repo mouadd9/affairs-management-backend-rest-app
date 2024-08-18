@@ -13,4 +13,6 @@ public interface AgencyService {
     AgencyDTO getAgencyById(Long agencyId) throws AgencyNotFoundException;
     AgencyDTO updateAgency(Long agencyId, AgencyDTO agencyDTO) throws AgencyNotFoundException, AgencyCodeIsTakenException;
     void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException;
+
+    long getAgencyCount();
 }
