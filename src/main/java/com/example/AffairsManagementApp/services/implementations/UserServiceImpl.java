@@ -133,6 +133,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDTO> getUsersByAgency(Long agencyId) throws AgencyNotFoundException {
+        Agency agency = agencyrepository.findById(agencyId).orElseThrow(()->new AgencyNotFoundException("agency not found"));
+        List<UserDTO> users = agency.getEmployeeDetailsList().stream().map(employeeDetails -> userMapper.convertToDTO(employeeDetails.getAppUser())).toList();
+        return users;
+    }
+
+    @Override
     public Map<String, Long> getUserCounts() throws RoleNotFoundException{
         Map<String, Long> countsByRole = new HashMap<>();
 

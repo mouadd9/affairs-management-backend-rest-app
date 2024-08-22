@@ -5,6 +5,7 @@ import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 import com.example.AffairsManagementApp.entities.Agency;
+import com.example.AffairsManagementApp.enums.AgencyStatus;
 import com.example.AffairsManagementApp.mappers.AgencyMapper;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import com.example.AffairsManagementApp.services.interfaces.AgencyService;
@@ -59,6 +60,8 @@ public class AgencyServiceImpl implements AgencyService {
         /*If the code is the same as the current one,it remains unchanged.
          If it’s different and unique, it gets updated.*/
         existingAgency.setAgencyCode(agencyDTO.getAgencyCode());
+        existingAgency.setAddress(agencyDTO.getAddress());
+        existingAgency.setStatus(agencyDTO.getStatus());
         Agency saved = agencyRepository.save(existingAgency);
         return agencyMapper.convertToDTO(saved);
     }
@@ -84,6 +87,14 @@ public class AgencyServiceImpl implements AgencyService {
         // here we should iterate over agencies
 
         return countsByAgency;
+    }
+
+    @Override
+    public void updateStatus(Long agencyId, AgencyStatus newStatus) throws AgencyNotFoundException {
+        Agency agencyToUpdate = agencyRepository.findById(agencyId).orElseThrow(()-> new AgencyNotFoundException("agency with id" + agencyId + "not found"));
+
+        agencyToUpdate.setStatus(newStatus);
+        agencyRepository.save(agencyToUpdate);
     }
 
 

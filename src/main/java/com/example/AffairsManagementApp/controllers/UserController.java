@@ -100,6 +100,20 @@ public class UserController {
         }
     }
 
+    @GetMapping("/agencies/{agencyId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<List<UserDTO>> getUsersByAgency(@PathVariable Long agencyId){
+
+        try {
+
+            List<UserDTO> userDTOS = userService.getUsersByAgency(agencyId);
+            return ResponseEntity.status(HttpStatus.OK).body(userDTOS);
+        }catch(AgencyNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long userId){
@@ -110,6 +124,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+
 
   /* // create an agency employee and assigns Agency role automatically.
    @PostMapping("/agency_employee/{agencyId}")

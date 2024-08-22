@@ -39,6 +39,6 @@ public interface UserService {
     UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException;
     // deletion
     void deleteUser(Long userId) throws UserIdNotFoundException;
-
+    List<UserDTO> getUsersByAgency(Long agencyId) throws AgencyNotFoundException;
     Map<String, Long> getUserCounts() throws RoleNotFoundException;
 }

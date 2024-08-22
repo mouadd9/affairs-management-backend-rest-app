@@ -4,6 +4,7 @@ import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
+import com.example.AffairsManagementApp.enums.AgencyStatus;
 import com.example.AffairsManagementApp.services.interfaces.AgencyService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -79,6 +80,25 @@ public class AgencyController {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 
         }
+    }
+
+    //this endpoint will get the id of the agency to patch and the new status
+    @PatchMapping("/{id}/status/{newState}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> updateStatus(@PathVariable(name = "id") Long agencyId,@PathVariable(name = "newState") AgencyStatus newStatus){
+
+        try {
+
+            agencyService.updateStatus(agencyId, newStatus);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+
+            // here we will send these two arguments to a service that fetch for the agency and chenge its status
+            // we will catch an exception if the agency doesnt exist
+        } catch(AgencyNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }
+
     }
 
 
