@@ -56,6 +56,31 @@ public class UserServiceImpl implements UserService {
         return userMapper.convertToDTO(userrepository.save(appUser));
     }
 
+    @Override
+    public UserDTO updateUser(Long userId, UserDTO userDTO) throws UserAlreadyExistsException, UserIdNotFoundException {
+        AppUser existingUser = userrepository.findById(userId)
+                .orElseThrow(() -> new UserIdNotFoundException("User not found with id: " + userId));
+        // here we search for a user with the same username as the one we are trying to use
+        AppUser userWithSameUsername = userrepository.findByUsername(userDTO.getUsername()).orElse(null);
+        // if it exists , and its with diff id than us , than we should throw an error meaning this username is already used by another user
+        if (userWithSameUsername != null && !userWithSameUsername.getId().equals(userId)) {
+            throw new UserAlreadyExistsException("Username already taken");
+        }
+        // Check if email is taken by another user
+        AppUser userWithSameEmail = userrepository.findByEmail(userDTO.getEmail()).orElse(null);
+        if (userWithSameEmail != null && !userWithSameEmail.getId().equals(userId)) {
+            throw new UserAlreadyExistsException("Email already taken");
+        }
+
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setFirstName(userDTO.getFirstName());
+        existingUser.setLastName(userDTO.getLastName());
+        AppUser updatedUser = userrepository.save(existingUser);
+        return userMapper.convertToDTO(updatedUser);
+    }
+
+
     // 2 add the role ADMIN to an existing AppUser
     @Override
     public void addAdminRole(Long userId) throws UserIdNotFoundException, RoleNotFoundException {
@@ -158,6 +183,7 @@ public class UserServiceImpl implements UserService {
 
 
     }
+
 
 
 

@@ -79,10 +79,10 @@ public class AgencyServiceImpl implements AgencyService {
     public Map<String, Long> getAgencyCount() {
         Map<String, Long> countsByAgency = new HashMap<>();
         List<Agency> allAgencies = agencyRepository.findAll();
-        long emptyAgencies = allAgencies.stream().filter(agency -> agency.getEmployeeDetailsList().isEmpty()).count();
+        long activeAgencies = allAgencies.stream().filter(agency -> agency.getStatus().equals(AgencyStatus.ACTIVE)).count();
 
-        countsByAgency.put("empty", emptyAgencies);
-        countsByAgency.put("non_empty", (long) allAgencies.size() - emptyAgencies);
+        countsByAgency.put("active", activeAgencies);
+        countsByAgency.put("inactive", (long) allAgencies.size() - activeAgencies);
         countsByAgency.put("total", (long) allAgencies.size());
         // here we should iterate over agencies
 

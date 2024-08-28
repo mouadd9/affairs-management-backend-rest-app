@@ -37,7 +37,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/{userId}/add-admin-role")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> addAdminRole(@PathVariable(name = "userId" ) Long userId){
         try {
@@ -58,6 +58,28 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch(RoleNotFoundException | UserIdNotFoundException | AgencyNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO){
+
+        try {
+            UserDTO user = userService.updateUser(userId, userDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        }catch (UserAlreadyExistsException e){
+            String errorMessage = null;
+
+            if (e.getMessage().contains("Username")){
+                errorMessage = "User with this username already exists";
+            }  else if (e.getMessage().contains("Email")) {
+                errorMessage = "User with this email already exists";
+            }
+                // if the user already exists
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+            } catch (UserIdNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with id: " + userId);
         }
     }
 
