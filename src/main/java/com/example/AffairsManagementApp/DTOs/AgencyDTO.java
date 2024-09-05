@@ -1,7 +1,9 @@
 package com.example.AffairsManagementApp.DTOs;
 
 import com.example.AffairsManagementApp.enums.AgencyStatus;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,8 @@ import java.util.Date;
 public class AgencyDTO {
     private Long id;
 
-    @NotNull(message = "Agency code cannot be null")
+    @NotBlank
+    @Pattern(regexp = "^[0-9]+$", message = "Code agence must be numeric")
     private String agencyCode;
 
     @NotNull(message = "Address cannot be null")

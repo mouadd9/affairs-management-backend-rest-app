@@ -10,6 +10,7 @@ import com.example.AffairsManagementApp.mappers.AgencyMapper;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import com.example.AffairsManagementApp.services.interfaces.AgencyService;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,9 @@ public class AgencyServiceImpl implements AgencyService {
     Agencyrepository agencyRepository;
     AgencyMapper agencyMapper;
     @Override
-    public AgencyDTO createAgency(AgencyDTO agencyDTO) throws AgencyCodeIsTakenException {
-        if ( agencyRepository.existsByAgencyCode(agencyDTO.getAgencyCode())){
+    public AgencyDTO createAgency(@NotNull AgencyDTO agencyDTO) throws AgencyCodeIsTakenException {
+        // we first check if the agencyCode already exists
+        if ( agencyRepository.existsByAgencyCode(agencyDTO.getAgencyCode()) ){
             throw new AgencyCodeIsTakenException("this code is used by an agency");
         }
        Agency agency = agencyRepository.save(agencyMapper.convertToEntity(agencyDTO));
@@ -51,8 +53,10 @@ public class AgencyServiceImpl implements AgencyService {
     @Override
     public AgencyDTO updateAgency(Long agencyId, AgencyDTO agencyDTO) throws AgencyNotFoundException, AgencyCodeIsTakenException {
 
+        // here we check if the agency exists
         Agency existingAgency = agencyRepository.findById(agencyId).orElseThrow(()-> new AgencyNotFoundException("agency with id" + agencyId + "not found"));
 
+        // here we check if the agency code is taken
         if (!existingAgency.getAgencyCode().equals(agencyDTO.getAgencyCode()) &&
                 agencyRepository.existsByAgencyCode(agencyDTO.getAgencyCode())) {
             throw new AgencyCodeIsTakenException("This code is used by another agency");

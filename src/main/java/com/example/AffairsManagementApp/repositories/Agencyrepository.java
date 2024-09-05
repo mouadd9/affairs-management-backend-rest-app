@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Agencyrepository extends JpaRepository<Agency, Long> {
  Boolean existsByAgencyCode(String agencyCode);
+ Agency findByAgencyCode(String agencyCode);
 }

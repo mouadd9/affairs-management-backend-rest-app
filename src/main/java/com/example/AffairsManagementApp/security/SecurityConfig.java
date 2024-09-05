@@ -83,6 +83,7 @@ public class SecurityConfig  {
                 .oauth2ResourceServer(oa-> oa.jwt(Customizer.withDefaults())) /*This part ensures that the JWT token is validated. This involves checking the token’s signature, expiration, and claims.*/
                 .authorizeHttpRequests(ar-> ar.requestMatchers("/api/auth/**").permitAll()
                                               .requestMatchers("/h2-console/**").permitAll()
+                                              .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                               .anyRequest().authenticated());/*This step ensures that the request is authenticated. The filter checks if the JWT token is valid and if it has been authenticated by the OAuth2ResourceServer configuration.*/
         return http.build();
     }

@@ -63,7 +63,7 @@ public class AgencyController {
             AgencyDTO agencyDTO = agencyService.getAgencyById(id);
             return ResponseEntity.ok(agencyDTO);
         } catch (AgencyNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

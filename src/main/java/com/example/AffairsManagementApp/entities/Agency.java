@@ -43,4 +43,6 @@ public class Agency {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "agency")
     private Collection<EmployeeDetails> employeeDetailsList = new HashSet<>();
 
+
+
 }
