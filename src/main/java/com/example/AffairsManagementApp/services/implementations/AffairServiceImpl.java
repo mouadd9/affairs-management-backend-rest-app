@@ -1,4 +1,4 @@
-package com.example.AffairsManagementApp.services;
+package com.example.AffairsManagementApp.services.implementations;
 
 import com.example.AffairsManagementApp.DTOs.AffairDTO;
 import com.example.AffairsManagementApp.Exceptions.AffairNotFoundException;
@@ -7,6 +7,7 @@ import com.example.AffairsManagementApp.entities.Affair;
 import com.example.AffairsManagementApp.mappers.AffairMapper;
 import com.example.AffairsManagementApp.repositories.Affairsrepository;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
+import com.example.AffairsManagementApp.services.interfaces.AffairService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

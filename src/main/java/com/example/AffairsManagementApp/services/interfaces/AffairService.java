@@ -1,12 +1,10 @@
-package com.example.AffairsManagementApp.services;
+package com.example.AffairsManagementApp.services.interfaces;
 
 import com.example.AffairsManagementApp.DTOs.AffairDTO;
 import com.example.AffairsManagementApp.Exceptions.AffairNotFoundException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
-import com.example.AffairsManagementApp.entities.Affair;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AffairService {
     AffairDTO createAffair(AffairDTO affair) throws AgencyNotFoundException; // the affair will be sent from the user

@@ -3,7 +3,7 @@ package com.example.AffairsManagementApp.controllers;
 import com.example.AffairsManagementApp.DTOs.AffairDTO;
 import com.example.AffairsManagementApp.Exceptions.AffairNotFoundException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
-import com.example.AffairsManagementApp.services.AffairService;
+import com.example.AffairsManagementApp.services.interfaces.AffairService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
