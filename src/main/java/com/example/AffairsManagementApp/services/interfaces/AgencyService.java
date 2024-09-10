@@ -2,6 +2,7 @@ package com.example.AffairsManagementApp.services.interfaces;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
+import com.example.AffairsManagementApp.Exceptions.AgencyHasAffairsException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 import com.example.AffairsManagementApp.enums.AgencyStatus;
@@ -14,7 +15,7 @@ public interface AgencyService {
     List<AgencyDTO> getAllAgencies();
     AgencyDTO getAgencyById(Long agencyId) throws AgencyNotFoundException;
     AgencyDTO updateAgency(Long agencyId, AgencyDTO agencyDTO) throws AgencyNotFoundException, AgencyCodeIsTakenException;
-    void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException;
+    void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException, AgencyHasAffairsException;
 
     Map<String, Long> getAgencyCount();
 

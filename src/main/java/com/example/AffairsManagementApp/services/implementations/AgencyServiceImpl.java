@@ -2,6 +2,7 @@ package com.example.AffairsManagementApp.services.implementations;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
+import com.example.AffairsManagementApp.Exceptions.AgencyHasAffairsException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 import com.example.AffairsManagementApp.entities.Agency;
@@ -71,10 +72,13 @@ public class AgencyServiceImpl implements AgencyService {
     }
 
     @Override
-    public void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException {
+    public void deleteAgency(Long agencyId) throws AgencyNotFoundException, AgencyHasEmployeesException, AgencyHasAffairsException {
         Agency agencyToRemove = agencyRepository.findById(agencyId).orElseThrow(()-> new AgencyNotFoundException("agency with id" + agencyId + "not found"));
         if (!agencyToRemove.getEmployeeDetailsList().isEmpty()){
             throw new AgencyHasEmployeesException("agency can not be deleted it has employees");
+        }
+        if(!agencyToRemove.getAffairs().isEmpty()){
+            throw new AgencyHasAffairsException("agency can not be deleted it has affairs");
         }
         agencyRepository.delete(agencyToRemove);
     }

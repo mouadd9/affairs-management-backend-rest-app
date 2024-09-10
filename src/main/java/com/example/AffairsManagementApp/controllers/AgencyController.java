@@ -2,6 +2,7 @@ package com.example.AffairsManagementApp.controllers;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
 import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
+import com.example.AffairsManagementApp.Exceptions.AgencyHasAffairsException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
 import com.example.AffairsManagementApp.enums.AgencyStatus;
@@ -110,7 +111,7 @@ public class AgencyController {
             // return ResponseEntity.noContent().build();
             // return new ResponseEntity<>(null,HttpStatus.NO_CONTENT );
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-        } catch(AgencyHasEmployeesException e) {
+        } catch(AgencyHasEmployeesException | AgencyHasAffairsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         } catch(AgencyNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
