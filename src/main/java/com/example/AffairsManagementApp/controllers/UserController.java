@@ -1,12 +1,12 @@
 package com.example.AffairsManagementApp.controllers;
 
 import com.example.AffairsManagementApp.DTOs.AgencyDTO;
+import com.example.AffairsManagementApp.DTOs.AgencyEmployeeDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
 import com.example.AffairsManagementApp.services.interfaces.EmployeeDetailsService;
 import com.example.AffairsManagementApp.services.interfaces.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -110,7 +110,7 @@ public class UserController {
     }
 
     // get an employee's agency
-    @GetMapping("/{userId}")
+    @GetMapping("/agency/{userId}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<AgencyDTO> getAgencyByEmployee(@PathVariable Long userId){
         try {
@@ -145,6 +145,19 @@ public class UserController {
         } catch (UserIdNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/details/{username}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_AGENCY_EMPLOYEE')")
+    public ResponseEntity<AgencyEmployeeDTO> getEmployeeDetails(@PathVariable String username){
+        try {
+            AgencyEmployeeDTO agencyEmployeeDTO = this.userService.getEmployeeDetailsByUsername(username);
+            return ResponseEntity.status(HttpStatus.OK).body(agencyEmployeeDTO);
+        } catch (UsernameNotFoundException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+
     }
 
 

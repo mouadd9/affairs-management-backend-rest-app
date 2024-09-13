@@ -5,9 +5,11 @@ import com.example.AffairsManagementApp.Exceptions.AgencyCodeIsTakenException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasAffairsException;
 import com.example.AffairsManagementApp.Exceptions.AgencyHasEmployeesException;
 import com.example.AffairsManagementApp.Exceptions.AgencyNotFoundException;
+import com.example.AffairsManagementApp.entities.Affair;
 import com.example.AffairsManagementApp.entities.Agency;
 import com.example.AffairsManagementApp.enums.AgencyStatus;
 import com.example.AffairsManagementApp.mappers.AgencyMapper;
+import com.example.AffairsManagementApp.repositories.Affairsrepository;
 import com.example.AffairsManagementApp.repositories.Agencyrepository;
 import com.example.AffairsManagementApp.services.interfaces.AgencyService;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AgencyServiceImpl implements AgencyService {
     Agencyrepository agencyRepository;
+    Affairsrepository affairsrepository;
     AgencyMapper agencyMapper;
     @Override
     public AgencyDTO createAgency(@NotNull AgencyDTO agencyDTO) throws AgencyCodeIsTakenException {
@@ -68,6 +71,13 @@ public class AgencyServiceImpl implements AgencyService {
         existingAgency.setAddress(agencyDTO.getAddress());
         existingAgency.setStatus(agencyDTO.getStatus());
         Agency saved = agencyRepository.save(existingAgency);
+        // then we should get all affairs submitted on this agency and change their agencyCode
+        List<Affair> affairs = affairsrepository.findByAgency(saved);
+        for (Affair affair : affairs) {
+            affair.setCodeAgence(saved.getAgencyCode());
+        }
+        affairsrepository.saveAll(affairs);
+
         return agencyMapper.convertToDTO(saved);
     }
 

@@ -1,5 +1,6 @@
 package com.example.AffairsManagementApp.services.interfaces;
 
+import com.example.AffairsManagementApp.DTOs.AgencyEmployeeDTO;
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
@@ -43,4 +44,6 @@ public interface UserService {
     Map<String, Long> getUserCounts() throws RoleNotFoundException;
 
     UserDTO updateUser(Long userId, UserDTO userDTO) throws UserAlreadyExistsException, UserIdNotFoundException;
+
+    AgencyEmployeeDTO getEmployeeDetailsByUsername(String username) throws EntityNotFoundException, UsernameNotFoundException;
 }

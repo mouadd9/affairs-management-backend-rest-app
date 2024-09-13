@@ -13,12 +13,11 @@ public class EmployeeDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "appUser_id", nullable = false)
     private AppUser appUser; // FK
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agency_id", nullable = false)
     private Agency agency; // FK
 

@@ -13,6 +13,6 @@ public class AgencyEmployeeDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private String password;
     private Long agencyId;
+    private String agencyCode;
 }

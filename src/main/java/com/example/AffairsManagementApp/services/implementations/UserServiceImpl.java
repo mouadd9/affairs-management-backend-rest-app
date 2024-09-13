@@ -1,5 +1,6 @@
 package com.example.AffairsManagementApp.services.implementations;
 
+import com.example.AffairsManagementApp.DTOs.AgencyEmployeeDTO;
 import com.example.AffairsManagementApp.DTOs.RoleDTO;
 import com.example.AffairsManagementApp.DTOs.UserDTO;
 import com.example.AffairsManagementApp.Exceptions.*;
@@ -21,10 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -80,6 +78,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.convertToDTO(updatedUser);
     }
 
+    @Override
+    public AgencyEmployeeDTO getEmployeeDetailsByUsername(String username) throws UsernameNotFoundException, EntityNotFoundException {
+        AppUser user = this.userrepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " is not found"));
+        EmployeeDetails employeeDetails = this.employeeDetailsrepository.findByAppUser(user).orElseThrow(() -> new EntityNotFoundException("Employee details not found for user " + username));
+        AgencyEmployeeDTO agencyEmployeeDTO = new AgencyEmployeeDTO();
+        agencyEmployeeDTO.setId(employeeDetails.getAppUser().getId());
+        agencyEmployeeDTO.setUsername(employeeDetails.getAppUser().getUsername());
+        agencyEmployeeDTO.setEmail(employeeDetails.getAppUser().getEmail());
+        agencyEmployeeDTO.setLastName(employeeDetails.getAppUser().getLastName());
+        agencyEmployeeDTO.setFirstName(employeeDetails.getAppUser().getFirstName());
+        agencyEmployeeDTO.setAgencyId(employeeDetails.getAgency().getId());
+        agencyEmployeeDTO.setAgencyCode(employeeDetails.getAgency().getAgencyCode());
+        return agencyEmployeeDTO;
+    }
 
     // 2 add the role ADMIN to an existing AppUser
     @Override
