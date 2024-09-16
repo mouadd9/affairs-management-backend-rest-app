@@ -27,6 +27,7 @@ public class UserMapper {
     }
     public AppUser convertToEntity(@NotNull UserDTO userDTO) {
         AppUser appUser = new AppUser();
+        appUser.setFirstTimeAuth(true); // at initial creation this will be set to true
         appUser.setUsername(userDTO.getUsername());
         appUser.setEmail(userDTO.getEmail());
         appUser.setFirstName(userDTO.getFirstName());

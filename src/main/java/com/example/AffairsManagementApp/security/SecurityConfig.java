@@ -65,6 +65,7 @@ public class SecurityConfig  {
 
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 
+        // here we set the UserDetailsService that will use the user repo to check if the user exists and to load the user
         daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
 
         return new ProviderManager(daoAuthenticationProvider);

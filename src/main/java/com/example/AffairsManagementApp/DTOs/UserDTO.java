@@ -14,6 +14,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UserDTO {
     private Long id;
+    private Boolean firstTimeAuth;
     private String username;
     private String email;
 

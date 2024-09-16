@@ -1,14 +1,10 @@
 package com.example.AffairsManagementApp.security;
-
-import com.example.AffairsManagementApp.Exceptions.UsernameNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -32,6 +28,7 @@ public class securityController {
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginDetails loginDetails){
 
+        // this authentication manager uses the User repository to check if the user with these credentials exist
         Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
 
         Instant instant = Instant.now();
@@ -41,7 +38,7 @@ public class securityController {
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(instant)
-                .expiresAt(instant.plus(1, ChronoUnit.HOURS))
+                .expiresAt(instant.plus(8, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("scope",scope )
                 .build();

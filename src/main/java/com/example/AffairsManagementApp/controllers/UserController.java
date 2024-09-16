@@ -37,6 +37,28 @@ public class UserController {
         }
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword){
+        try{
+            userService.resetPassword(username, newPassword);
+            return ResponseEntity.ok().build();
+        } catch (UsernameNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+
+
+    }
+
+    @GetMapping("/first-login-status/{username}")
+    public ResponseEntity<Boolean> checkFirstLoginStatus(@PathVariable String username) {
+        try {
+            Boolean status = userService.checkFirstLoginStatus(username);
+            return ResponseEntity.ok(status);
+        } catch (UsernameNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+
+    }
     @PutMapping("/{userId}/add-admin-role")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> addAdminRole(@PathVariable(name = "userId" ) Long userId){

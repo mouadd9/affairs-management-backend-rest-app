@@ -37,7 +37,6 @@ public interface UserService {
     // retrieving users
     List<UserDTO> getAllUsers() ;
     AppUser getUserById(Long userId) throws UserIdNotFoundException;
-    UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException;
     // deletion
     void deleteUser(Long userId) throws UserIdNotFoundException;
     List<UserDTO> getUsersByAgency(Long agencyId) throws AgencyNotFoundException;
@@ -46,4 +45,8 @@ public interface UserService {
     UserDTO updateUser(Long userId, UserDTO userDTO) throws UserAlreadyExistsException, UserIdNotFoundException;
 
     AgencyEmployeeDTO getEmployeeDetailsByUsername(String username) throws EntityNotFoundException, UsernameNotFoundException;
+    Boolean checkFirstLoginStatus(String username) throws UsernameNotFoundException;
+
+    void resetPassword(String username, String newPassword) throws UsernameNotFoundException;
 }
+

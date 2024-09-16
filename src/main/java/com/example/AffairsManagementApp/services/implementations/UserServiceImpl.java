@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
     private final Rolerepository rolerepository;
     private final EmployeeDetailsrepository employeeDetailsrepository;
     private final Userrepository userrepository;
-    private final RoleMapper roleMapper;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
@@ -49,6 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("appUser already exists");
         }
         AppUser appUser = userMapper.convertToEntity(userDTO);
+        // here we get the password then we encode it before we save the user to the database
         String pw = appUser.getPassword();
         appUser.setPassword(passwordEncoder.encode(pw));
         return userMapper.convertToDTO(userrepository.save(appUser));
@@ -91,6 +91,21 @@ public class UserServiceImpl implements UserService {
         agencyEmployeeDTO.setAgencyId(employeeDetails.getAgency().getId());
         agencyEmployeeDTO.setAgencyCode(employeeDetails.getAgency().getAgencyCode());
         return agencyEmployeeDTO;
+    }
+
+    @Override
+    public Boolean checkFirstLoginStatus(String username) throws UsernameNotFoundException {
+        AppUser user = this.userrepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " is not found"));
+        return user.getFirstTimeAuth(); // if this returns true then the user should change his password
+    }
+
+    @Override
+    public void resetPassword(String username, String newPassword) throws UsernameNotFoundException {
+
+        AppUser user = this.userrepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " is not found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setFirstTimeAuth(false);
+        userrepository.save(user);
     }
 
     // 2 add the role ADMIN to an existing AppUser
@@ -145,10 +160,6 @@ public class UserServiceImpl implements UserService {
         return userrepository.findById(userId).orElseThrow(()-> new UserIdNotFoundException("appUser with the id " + userId + "not found"));
     }
 
-    @Override
-    public UserDTO getUserDTOById(Long userId) throws UserIdNotFoundException {
-        return null;
-    }
 
 
     @Override
