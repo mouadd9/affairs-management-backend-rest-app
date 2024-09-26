@@ -2,7 +2,7 @@ spring:
   application:
     name: AffairsManagementApp
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydb  # PostgreSQL database URL
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/mydb}  # PostgreSQL database URL
     username: postgres  # Database username
     password: password  # Database password
     driver-class-name: org.postgresql.Driver  # PostgreSQL JDBC driver
