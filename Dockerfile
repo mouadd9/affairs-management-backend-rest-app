@@ -14,6 +14,8 @@ COPY pom.xml .
 # Copy the source code
 COPY src ./src
 
+COPY ./certs ./src/main/resources/certs
+
 # Build the application
 # -DskipTests skips running tests to speed up the build process
 # Remove this flag if you want to run tests during the build
